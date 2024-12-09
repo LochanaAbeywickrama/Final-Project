@@ -60,9 +60,9 @@ async def sms_reply(Body: str = Form(...), From: str = Form(...)):
 
         # Check whether URL is phishing or legitimate
         if prediction[0] == 1:
-            result = f"The URL: {url_to_check} is detected as 🚨 *Phishing* 🚨. Do not click the link!"
-        else:
             result = f"The URL: {url_to_check} is detected as ✅ *Legitimate* ✅. Safe to click!"
+        else:
+            result = f"The URL: {url_to_check} is detected as 🚨 *Phishing* 🚨. Do not click the link!"
         
         # Create Twilio response with formatted message
         response = MessagingResponse()
