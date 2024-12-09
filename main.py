@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Form
-from pydantic import BaseModel
 import joblib
 import re
 from urllib.parse import urlparse
@@ -52,11 +51,16 @@ async def sms_reply(Body: str = Form(...), From: str = Form(...)):
     # Extract URL from message body using regex
     url = re.findall(r'(https?://[^\s]+)', Body)
     
+    print(f"Received message: {Body}")  # Debugging line to check incoming message
+    print(f"Extracted URL: {url}")  # Debugging line to check extracted URL
+
     if url:
         url_to_check = url[0]  # Take the first URL found
         features = extract_features(url_to_check)
         feature_list = [list(features.values())]
         prediction = model.predict(feature_list)
+        
+        print(f"Prediction: {prediction[0]}")  # Debugging line to check model prediction
 
         # Check whether URL is phishing or legitimate
         if prediction[0] == 1:
@@ -67,11 +71,10 @@ async def sms_reply(Body: str = Form(...), From: str = Form(...)):
         # Create Twilio response with formatted message
         response = MessagingResponse()
         response.message(result)
+        print("Response message: ", result)  # Debugging line to check what is being sent
         return str(response)
     else:
         response = MessagingResponse()
         response.message("No URL found in the message.")
         return str(response)
 
-    
-    
