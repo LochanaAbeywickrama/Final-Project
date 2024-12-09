@@ -42,6 +42,11 @@ def extract_features(url):
 
     return features
 
+@app.get("/")
+def read_root():
+    return {"message": "FastAPI Phishing Detection with Twilio!"}
+
+
 @app.post("/sms")
 async def sms_reply(Body: str = Form(...), From: str = Form(...)):
     # Extract URL from message body using regex
