@@ -7,7 +7,6 @@ import tldextract
 import requests
 from bs4 import BeautifulSoup
 import datetime
-from fastapi.responses import JSONResponse
 
 # Load trained model
 model = joblib.load("random_forest_model.pkl")
@@ -69,7 +68,9 @@ async def detect_url(data: URLData, request: Request):
 
     result = {
         "legitimate": bool(prediction[0] == 1),
-        "phishing": bool(prediction[0] == 0)
+        "phishing": bool(prediction[0] == 0),
+        "message": "Phishing URL logged in honeypot",
+        "url": data.url
     }
 
     # If phishing detected, log it into the honeypot database
@@ -77,7 +78,7 @@ async def detect_url(data: URLData, request: Request):
         client_ip = request.client.host
         log_phishing_url(data.url, client_ip, "API Detection")
 
-    return result
+    return result  
 
 # Honeypot Logging Function (Stores in MySQL)
 def log_phishing_url(url, ip, source):
@@ -94,9 +95,4 @@ def log_phishing_url(url, ip, source):
     
     print(f"Logged phishing URL in honeypot: {url} from {ip}")
 
-# API to Log Phishing URLs from Browser Extension
-@app.post("/honeypot/log")
-async def log_from_extension(data: URLData, request: Request):
-    client_ip = request.client.host  # Get client's IP address
-    log_phishing_url(data.url, client_ip, "Browser Extension")
-    return JSONResponse(content={"message": "Phishing URL logged in honeypot", "url": data.url})
+
