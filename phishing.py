@@ -13,10 +13,12 @@ model = joblib.load("random_forest_model.pkl")
 
 app = FastAPI()
 
+
 # MySQL Database Connection
 def get_db_connection():
     return mysql.connector.connect(
-        host="localhost",       # XAMPP default MySQL host
+        host="0.tcp.in.ngrok.io",
+        port=15764,       # XAMPP default MySQL host
         user="root",            # Default XAMPP user
         password="",            # Default is empty (change if set)
         database="honeypot_db"  # Database name
@@ -63,20 +65,20 @@ def read_root():
 @app.post("/detect")
 async def detect_url(data: URLData, request: Request):
     features = extract_features(data.url)
-    feature_list = [list(features.values())]  # Convert to 2D array
+    feature_list = [list(features.values())]  
     prediction = model.predict(feature_list)
 
     result = {
         "legitimate": bool(prediction[0] == 1),
         "phishing": bool(prediction[0] == 0),
-        "message": "Phishing URL logged in honeypot",
+        "message": "Phishing URL logged in honeypot" if prediction[0] == 0 else "Safe URL",
         "url": data.url
     }
 
-    # If phishing detected, log it into the honeypot database
+    # If phishing detected, log it into MySQL (XAMPP)
     if result["phishing"]:
         client_ip = request.client.host
-        log_phishing_url(data.url, client_ip, "API Detection")
+        log_phishing_url(data.url, client_ip, "Browser Extension")
 
     return result  
 
@@ -94,5 +96,3 @@ def log_phishing_url(url, ip, source):
     db.close()
     
     print(f"Logged phishing URL in honeypot: {url} from {ip}")
-
-
