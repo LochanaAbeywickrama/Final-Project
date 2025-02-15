@@ -71,7 +71,7 @@ async def detect_url(data: URLData, request: Request):
     result = {
         "legitimate": bool(prediction[0] == 1),
         "phishing": bool(prediction[0] == 0),
-        "message": "Phishing URL logged in honeypot" if prediction[0] == 0 else "Safe URL",
+        "message": "Phishing URL logged in honeypot",
         "url": data.url
     }
 
