@@ -21,6 +21,9 @@ def get_db_connection():
         password="LYab@3426", # Google Cloud SQL password
         database="phishing_db" # Database name
     )
+    
+public_ip = requests.get("https://ifconfig.me").text
+print(f"Public IP Address of Render Instance: {public_ip}")
 
 # Define URL input model
 class URLData(BaseModel):
