@@ -18,7 +18,7 @@ def get_db_connection():
     return mysql.connector.connect(
         host="35.226.7.125",      # Replace with your Cloud SQL Public IP
         user="myuser",         # Google Cloud SQL username
-        password="", # Google Cloud SQL password
+        password="LYab@3426", # Google Cloud SQL password
         database="phishing_db" # Database name
     )
 
@@ -85,7 +85,7 @@ def log_phishing_url(url, ip, source):
     db = get_db_connection()
     cursor = db.cursor()
     
-    sql = "INSERT INTO phishing_logs (url, ip, timestamp, source) VALUES (%s, %s, %s, %s)"
+    sql = "INSERT INTO url_logs (url, ip, timestamp, source) VALUES (%s, %s, %s, %s)"
     values = (url, ip, datetime.datetime.now(), source)
     
     cursor.execute(sql, values)
