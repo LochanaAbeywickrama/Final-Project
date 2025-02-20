@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Phishing URL Detector</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      width: 200px;
+      padding: 10px;
+    }
+    button {
+      background-color: #ff5733;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #e64a19;
+    }
+    #resultMessage {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <button id="detectButton">Detect Phishing URLs</button>
+  <p id="resultMessage">Click the button to check if the current page is phishing or legitimate.</p>
+  <script src="popup.js"></script>
+</body>
+</html>
